@@ -22,6 +22,9 @@ button {
     border: none;
     padding: 10px;
 }
+mark {
+    background: rgb(255, 241, 202);
+}
 hgroup {
     text-align: center;
     line-height: 110%;
@@ -49,4 +52,8 @@ body:has(article[contenteditable]) p.instructions {
 :read-write:focus {
     outline: 2px dotted var(--ui-color);
     outline-offset: 20px;
+}
+
+button.modal {
+    position: absolute;
 }
