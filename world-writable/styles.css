@@ -2,30 +2,51 @@
     --font-family: "Hoefler Text", "Baskerville Old Face", Garamond, serif;
     --font-size: 1.4rem;
     --line-height: 140%;
+    --ui-color: rgb(255, 136, 0);
+    --light: white;
+    --dark: rgb(20,20,20);
 }
 
 body {
     font-family: var(--font-family);
     font-size: var(--font-size);
     line-height: var(--line-height);
+    color: var(--dark);
 }
-section {
+article {
     margin: 5vh 20vw;
+}
+button {
+    color: var(--light);
+    background: var(--ui-color);
+    border: none;
+    padding: 10px;
 }
 hgroup {
     text-align: center;
     line-height: 110%;
 }
-button {
+nav {
     margin: 5vh auto;
-    display: block;
+    height: 5vh;
+}
+nav .instructions {
+    text-align: center;
+    color: gray;
+    font-style: italic;
 }
 #save {
     display: none;
+    margin: auto;
 }
-body[data-edited] #save {
+body:has(article[contenteditable]) #save {
     display: block;
 }
-body[data-edited] #edit {
+
+body:has(article[contenteditable]) p.instructions {
     display: none;
+}
+:read-write:focus {
+    outline: 2px dotted var(--ui-color);
+    outline-offset: 20px;
 }

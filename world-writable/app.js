@@ -1,7 +1,8 @@
-document.querySelector('#edit').addEventListener('click', () => {
+document.querySelector('article').addEventListener('dblclick', () => {
 
-    document.querySelector('article').setAttribute('contenteditable', true)
-    document.body.setAttribute('data-edited', true)
+    const article = document.querySelector('article')
+    article.setAttribute('contenteditable', true)
+    article.focus()
 
 })
 
@@ -10,7 +11,6 @@ document.querySelector("#save").addEventListener('click', async () => {
     const fh = await window.showSaveFilePicker()
 
     document.querySelector('article').removeAttribute('contenteditable')
-    document.body.removeAttribute('data-edited')
 
     // Get the current content of this HTML file
     const s = new XMLSerializer()
