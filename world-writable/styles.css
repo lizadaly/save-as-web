@@ -16,7 +16,16 @@ hgroup {
     text-align: center;
     line-height: 110%;
 }
-button#edit {
+button {
     margin: 5vh auto;
     display: block;
+}
+#save {
+    display: none;
+}
+body[data-edited] #save {
+    display: block;
+}
+body[data-edited] #edit {
+    display: none;
 }
