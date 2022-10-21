@@ -1,0 +1,18 @@
+:root {
+    --font-family: "Hoefler Text", "Baskerville Old Face", Garamond, serif;
+    --font-size: 1.4rem;
+    --line-height: 140%;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+}
+section {
+    margin: 5vh 20vw;
+}
+hgroup {
+    text-align: center;
+    line-height: 110%;
+}
