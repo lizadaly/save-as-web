@@ -15,7 +15,7 @@ request.onupgradeneeded = (event) => {
 const article = document.querySelector('article')
 
 // If the user double clicks on the content, make it editable
-article.addEventListener('dblclick', () => {
+article.addEventListener('click', () => {
     article.setAttribute('contenteditable', true)
     article.focus()
 })
@@ -44,25 +44,27 @@ article.addEventListener('mouseup', (event) => {
 })
 
 const deletePrompt = (mark) => {
-    let modal
+    setTimeout(() => {
+        let modal
 
-    modal = document.querySelector('#delete-modal')
-    if (!modal) {
-        modal = document.createElement('button')
-        modal.classList.add('modal')
-        modal.id = 'delete-modal'
-        modal.textContent = 'Delete this highlight?'
-    }
-    modal.addEventListener('click', () => {
-        const parent = mark.parentNode
-        while (mark.firstChild) {
-            parent.insertBefore(mark.firstChild, mark)
+        modal = document.querySelector('#delete-modal')
+        if (!modal) {
+            modal = document.createElement('button')
+            modal.classList.add('modal')
+            modal.id = 'delete-modal'
+            modal.textContent = 'Delete this highlight?'
         }
-        mark.remove()
-        modal.remove()
-        article.setAttribute("contenteditable", true)
-    })
-    event.target.insertAdjacentElement("afterend", modal)
+        modal.addEventListener('click', () => {
+            const parent = mark.parentNode
+            while (mark.firstChild) {
+                parent.insertBefore(mark.firstChild, mark)
+            }
+            mark.remove()
+            modal.remove()
+            article.setAttribute("contenteditable", true)
+        })
+        mark.insertAdjacentElement("afterend", modal)
+    }, 1000)
 }
 
 const deleteTimeout = () => {
@@ -72,7 +74,7 @@ const deleteTimeout = () => {
 }
 
 document.querySelectorAll('mark').forEach((mark) => {
-    mark.addEventListener('mouseover',  () => deletePrompt(mark))
+    mark.addEventListener('mouseover', () => deletePrompt(mark))
     mark.addEventListener('mouseleave', deleteTimeout)
 })
 

@@ -12,7 +12,7 @@ Clone or copy this repo.
 
 Open `index.html` by double-clicking on it. You don't need a web server!
 
-Double-click on the book text to edit it. You can also highlight within a paragraph and your highlight will be persisted. Highlights can be deleted by hovering over them and clicking the delete button.
+Click on the book text to edit it. You can also highlight within a paragraph and your highlight will be persisted. Highlights can be deleted by hovering over them and clicking the delete button.
 
 When done, click "Save changes".
 
