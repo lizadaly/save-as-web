@@ -16,3 +16,7 @@ hgroup {
     text-align: center;
     line-height: 110%;
 }
+button#edit {
+    margin: 5vh auto;
+    display: block;
+}
