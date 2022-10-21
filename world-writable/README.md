@@ -23,4 +23,4 @@ The `index.html` will be updated in place with your changes. No backups! Live li
 
 (After the first time, you won't need to go through the folder dialog again, but the browser will ask you to re-confirm that you allow file access on each save.)
 
-<img src="demo.gif" alt="A screencast demo of the application showing editing in place">
+<img src="demo.gif" alt="A screencast demo of the application showing editing in place"> 
