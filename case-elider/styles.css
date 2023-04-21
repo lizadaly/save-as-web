@@ -18,7 +18,7 @@ form {
     display: block;
 }
 article {
-    margin: 5vh 20vw;
+    margin: 5vh 20vw 10vh 20vw;
 }
 .citations {
     font-style: italic;
@@ -71,4 +71,15 @@ button.modal {
     text-align: center;
     padding: .5em;
     font-size: smaller;
+}
+footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    background: rgb(250,250,250);
+    padding: .25rem;
+}
+footer p {
+    text-align: center; 
+
 }
