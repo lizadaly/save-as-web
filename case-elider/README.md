@@ -9,3 +9,4 @@ select an opinion, then do a simple highlight-elide-unelide loop.
 4. Once highlighted, click "Elide"
 5. The content will now be elided. Click on the "..." you created to unelide.
 
+Demo at [https://lizadaly.github.io/save-as-web/case-elider/](https://lizadaly.github.io/save-as-web/case-elider/)
