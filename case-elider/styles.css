@@ -1,0 +1,88 @@
+:root {
+    --sans-font-family: "Helvetica", sans-serif;
+    --font-size: 1.4rem;
+    --line-height: 140%;
+    --ui-color: rgb(255, 136, 0);
+    --light: white;
+    --dark: rgb(20,20,20);
+}
+
+body {
+    font-family: var(--sans-font-family);
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    color: var(--dark);
+}
+form {
+    text-align: center;
+    display: block;
+}
+article {
+    margin: 5vh 20vw;
+}
+.citations {
+    font-style: italic;
+}
+mark {
+    background: rgb(255, 241, 202);
+}
+mark::has(.elided-content) {
+    cursor: pointer;
+}
+.elided-content {
+    display: none;
+}
+
+button {
+    padding: 10px;
+    background: var(--ui-color);
+    color: white;
+    border: none;
+}
+button.elide {
+    position: absolute;
+    left: 10%;
+}
+hgroup {
+    text-align: center;
+    line-height: 110%;
+}
+nav {
+    margin: 5vh auto;
+    height: 5vh;
+}
+nav .instructions {
+    text-align: center;
+    color: gray;
+    font-style: italic;
+}
+#save {
+    display: none;
+    margin: auto;
+}
+body:has(article[contenteditable]) #save {
+    display: block;
+}
+
+body:has(article[contenteditable]) p.instructions {
+    display: none;
+}
+.results {
+    font-size: smaller;
+}
+.results li {
+    margin-bottom: .75em;
+}
+.results li:hover {
+    background: lightyellow;
+}
+
+button.modal {
+    position: absolute;
+}
+.elision-note {
+    background: lightyellow;
+    text-align: center;
+    padding: .5em;
+    font-size: smaller;
+}
