@@ -9,6 +9,8 @@ select an opinion, then do a simple highlight-elide-unelide loop.
 4. Once highlighted, click "Elide"
 5. The content will now be elided. Click on the "..." you created to unelide.
 
+* For now, only select within a single paragraph (or block-level element).
+
 Demo at [https://lizadaly.github.io/save-as-web/case-elider/](https://lizadaly.github.io/save-as-web/case-elider/)
 
 ## TODO 
