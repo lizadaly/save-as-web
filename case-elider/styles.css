@@ -26,7 +26,7 @@ article {
 mark {
     background: rgb(255, 241, 202);
 }
-mark::has(.elided-content) {
+mark:has(.elided-content) {
     cursor: pointer;
 }
 .elided-content {
@@ -51,22 +51,8 @@ nav {
     margin: 5vh auto;
     height: 5vh;
 }
-nav .instructions {
-    text-align: center;
-    color: gray;
-    font-style: italic;
-}
-#save {
-    display: none;
-    margin: auto;
-}
-body:has(article[contenteditable]) #save {
-    display: block;
-}
 
-body:has(article[contenteditable]) p.instructions {
-    display: none;
-}
+
 .results {
     font-size: smaller;
 }
