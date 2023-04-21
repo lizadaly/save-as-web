@@ -97,7 +97,6 @@ const selector = () => {
     sel.removeAllRanges();
   }
 };
-const parser = new DOMParser();
 
 const elider = (mark, button) => {
   const container = document.createElement("span");
