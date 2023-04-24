@@ -1,6 +1,6 @@
 # The case elider
 
-Quick demo of a single page, dependency-free webapp to interface with the <a href="https://www.courtlistener.com/">CourtListener</a> search API, 
+Quick demo of a single page, dependency-free webapp to interface with the <a href="https://www.courtlistener.com/">CourtListener</a> search API,
 select an opinion, then do a simple highlight-elide-unelide loop.
 
 1. Search for a case (e.g. "brown v board")
@@ -9,14 +9,13 @@ select an opinion, then do a simple highlight-elide-unelide loop.
 4. Once highlighted, click "Elide"
 5. The content will now be elided. Click on the "..." you created to unelide.
 
-
-
 Demo at [https://lizadaly.github.io/save-as-web/case-elider/](https://lizadaly.github.io/save-as-web/case-elider/)
 
-## TODO 
+## TODO
 
 1. "Add all to clipboard" button (would only select the case content)
 1. "Download as HTML" (ditto)
 1. Auto-save in browser local storage
 1. Allow retrieving previous cases from local storage
 1. Support non-contained ranges across DOM nodes
+1. Serialize CourtListener ID and annotation data into a URL blob that can be hot-linked and iframed
