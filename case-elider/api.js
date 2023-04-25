@@ -70,7 +70,7 @@ async function search(query) {
 
 const form = document.querySelector("form")
 
-form.addEventListener("submit", (e) => {
+form?.addEventListener("submit", (e) => {
   e.preventDefault()
   const formData = new FormData(form)
   search(formData.get("query"))
@@ -79,21 +79,57 @@ form.addEventListener("submit", (e) => {
 const selector = () => {
   const sel = document.getSelection()
   if (sel.rangeCount > 0 && !sel.getRangeAt(0).collapsed) {
-    const range = sel.getRangeAt(0)
-    const mark = document.createElement("mark")
-    try {
-      range.surroundContents(mark)
-    } catch (DOMException) {
-      console.warn(
-        "Only highlighting within a block element is currently supported"
+    const containingRange = sel.getRangeAt(0)
+    const start = sel.anchorNode
+    const end = sel.focusNode
+
+    let node, foundStart, foundEnd
+    const ranges = []
+    if (start.nodeType === Node.TEXT_NODE && end.nodeType == Node.TEXT_NODE) {
+      const iter = document.createNodeIterator(
+        containingRange.commonAncestorContainer,
+        NodeFilter.SHOW_TEXT
       )
-      return
+
+      while ((node = iter.nextNode()) && !foundEnd) {
+        console.log(node)
+        if (node === start) {
+          foundStart = true
+        }
+        if (!foundStart) {
+          continue
+        }
+
+        const range = new Range()
+
+        if (node === start) {
+          range.setStart(node, sel.anchorOffset)
+        } else {
+          range.setStart(node, 0)
+        }
+
+        if (node === end) {
+          range.setEnd(node, sel.focusOffset)
+        } else {
+          range.setEnd(node, node.textContent?.length)
+        }
+        ranges.push(range)
+
+        if (node === end) {
+          foundEnd = true
+        }
+      }
     }
-    const button = document.createElement("button")
-    button.classList.add("elide")
-    button.innerText = "Elide this"
-    button.addEventListener("click", () => elider(mark, button))
-    mark.insertAdjacentElement("afterEnd", button)
+    for (const range of ranges) {
+      const mark = document.createElement("mark")
+      range.surroundContents(mark)
+    }
+    // const button = document.createElement("button")
+    // button.classList.add("elide")
+    // button.innerText = "Elide this"
+    // button.addEventListener("click", () => elider(mark, button))
+    // mark.insertAdjacentElement("afterEnd", button)
+
     sel.removeAllRanges()
   }
 }
@@ -113,3 +149,7 @@ const elider = (mark, button) => {
   })
   button.remove()
 }
+
+document
+  .querySelector("[data-test-case]")
+  ?.addEventListener("mouseup", selector)
