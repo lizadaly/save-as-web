@@ -83,3 +83,13 @@ footer p {
     text-align: center; 
 
 }
+del {
+    text-decoration: none;
+
+}
+del * {
+    display: none;
+}
+del::after {
+    content: " ... ";
+}

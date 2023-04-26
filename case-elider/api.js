@@ -10,11 +10,15 @@ async function search(query) {
   document.querySelector(".case").replaceChildren()
 
   const resp = await fetch(
-    `${SEARCH_ENDPOINT}?` + new URLSearchParams({ q: query })
+    `${SEARCH_ENDPOINT}?` + new URLSearchParams({
+      q: query
+    })
   )
 
   if (resp.ok) {
-    const { results } = await resp.json()
+    const {
+      results
+    } = await resp.json()
     submit.value = "Search"
     document.querySelector("form").reset()
 
@@ -22,7 +26,12 @@ async function search(query) {
     const list = document.createElement("ol")
 
     for (const result of results) {
-      const { id, caseName, citation, dateFiled } = result
+      const {
+        id,
+        caseName,
+        citation,
+        dateFiled
+      } = result
 
       const item = document.createElement("li")
       const button = document.createElement("button")
@@ -43,16 +52,15 @@ async function search(query) {
         const id = e.target.getAttribute("data-id")
         const resp = await fetch(`${OPINION_ENDPOINT}${id}/`)
         if (resp.ok) {
-          const { html } = await resp.json()
+          const {
+            html
+          } = await resp.json()
 
           const section = document.createElement("section")
           section.innerHTML = html
-          section.addEventListener("mouseup", selector)
+          document.body.addEventListener("mouseup", selector)
 
           const caseContainer = document.querySelector(".case")
-          caseContainer.innerHTML = `
-                    <p class="elision-note">Note: only eliding within a single paragraph is currently supported.
-                    `
           caseContainer.append(section)
           resultsContainer.replaceChildren()
         } else {
@@ -80,76 +88,106 @@ const selector = () => {
   const sel = document.getSelection()
   if (sel.rangeCount > 0 && !sel.getRangeAt(0).collapsed) {
     const containingRange = sel.getRangeAt(0)
-    const start = sel.anchorNode
-    const end = sel.focusNode
+    let start = sel.anchorNode
+    let end = sel.focusNode
 
     let node, foundStart, foundEnd
+
     const ranges = []
-    if (start.nodeType === Node.TEXT_NODE && end.nodeType == Node.TEXT_NODE) {
-      const iter = document.createNodeIterator(
-        containingRange.commonAncestorContainer,
-        NodeFilter.SHOW_TEXT
-      )
 
-      while ((node = iter.nextNode()) && !foundEnd) {
-        console.log(node)
-        if (node === start) {
-          foundStart = true
-        }
-        if (!foundStart) {
-          continue
-        }
+    if (start.nodeType != Node.TEXT_NODE) {
+      start = document.createNodeIterator(start, NodeFilter.SHOW_TEXT).nextNode() || start
+    }
+    if (end.nodeType != Node.TEXT_NODE) {
+      let lastText
 
-        const range = new Range()
-
-        if (node === start) {
-          range.setStart(node, sel.anchorOffset)
-        } else {
-          range.setStart(node, 0)
-        }
-
-        if (node === end) {
-          range.setEnd(node, sel.focusOffset)
-        } else {
-          range.setEnd(node, node.textContent?.length)
-        }
-        ranges.push(range)
-
-        if (node === end) {
-          foundEnd = true
+      const endIter = document.createNodeIterator(document.querySelector('article'), NodeFilter.SHOW_ALL)
+      while ((node = endIter.nextNode()) && node != end) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          lastText = node
         }
       }
+      end = lastText
     }
+    if (start.nodeType != Node.TEXT_NODE || end.nodeType != Node.TEXT_NODE) {
+      console.error("Could not find text nodes in one of")
+      console.error(start)
+      console.error(end)
+    }
+
+    const iter = document.createNodeIterator(
+      containingRange.commonAncestorContainer,
+      NodeFilter.SHOW_TEXT
+    )
+
+    while ((node = iter.nextNode()) && !foundEnd) {
+      if (node === start) {
+        foundStart = true
+      }
+      if (!foundStart) {
+        continue
+      }
+
+      const range = new Range()
+
+      if (node === start) {
+        range.setStart(node, sel.anchorOffset)
+      } else {
+        range.setStart(node, 0)
+      }
+
+      if (node === end) {
+        range.setEnd(node, sel.focusOffset)
+      } else {
+        range.setEnd(node, node.textContent?.length)
+      }
+      ranges.push(range)
+
+      if (node === end) {
+        foundEnd = true
+      }
+
+    }
+    let mark 
+    const elisionId = crypto.randomUUID()
+
     for (const range of ranges) {
-      const mark = document.createElement("mark")
+      mark = document.createElement("mark")
+      mark.setAttribute('data-selection-id', elisionId)
       range.surroundContents(mark)
     }
-    // const button = document.createElement("button")
-    // button.classList.add("elide")
-    // button.innerText = "Elide this"
-    // button.addEventListener("click", () => elider(mark, button))
-    // mark.insertAdjacentElement("afterEnd", button)
+    const button = document.createElement("button")
+    button.classList.add("elide")
+    button.innerText = "Elide this"
+    button.addEventListener("click", () => elider(elisionId, button))
+    mark.insertAdjacentElement("afterEnd", button)
 
     sel.removeAllRanges()
   }
 }
 
-const elider = (mark, button) => {
-  const container = document.createElement("span")
-  container.classList.add("elided-content")
-  container.innerHTML = mark.innerHTML
-  mark.replaceChildren(" ... ", container)
-  mark.title = "Click to unelide"
-  mark.addEventListener("click", (e) => {
-    mark.insertAdjacentHTML(
-      "beforeBegin",
-      mark.querySelector(".elided-content").innerHTML
-    )
-    mark.remove()
-  })
-  button.remove()
+const elider = (uuid, button) => {
+  for (const mark of document.querySelectorAll(`[data-selection-id="${uuid}"]`)) {
+    const del = document.createElement('del')
+    const range = new Range()
+    range.selectNode(mark)
+    range.surroundContents(del)
+  }
+  // const container = document.createElement("span")
+  // container.classList.add("elided-content")
+  // container.innerHTML = mark.innerHTML
+  // mark.replaceChildren(" ... ", container)
+  // mark.title = "Click to unelide"
+  // mark.addEventListener("click", (e) => {
+  //   mark.insertAdjacentHTML(
+  //     "beforeBegin",
+  //     mark.querySelector(".elided-content").innerHTML
+  //   )
+  //   mark.remove()
+  // })
+  // button.remove()
 }
 
 document
-  .querySelector("[data-test-case]")
+  .querySelector("body")
   ?.addEventListener("mouseup", selector)
