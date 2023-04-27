@@ -6,8 +6,9 @@ async function search(query) {
   const submit = document.querySelector('input[type="submit"]')
   submit.value = "Searching"
 
-  document.querySelector(".results").replaceChildren()
-  document.querySelector("article").replaceChildren()
+  for (const sel of [".results", "article", ".case-citation"]) {
+    document.querySelector(sel).replaceChildren()
+  }
 
   const resp = await fetch(
     `${SEARCH_ENDPOINT}?` +

@@ -138,6 +138,7 @@ footer p {
 }
 del.elided-content {
   text-decoration: none;
+  text-indent: 0;
 }
 del.elided-content {
   display: none;
@@ -151,6 +152,7 @@ ins.elide-marker {
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
+  text-indent: 0;
 }
 
 /* Case content */
@@ -167,4 +169,24 @@ ins.elide-marker {
 .num .num {
   float: left;
   margin-left: -2em;
+}
+a.footnote {
+  font-size: smaller;
+  vertical-align: super;
+  padding: 0 .25em;
+}
+
+a.footnote::before {
+  content: "[";
+}
+a.footnote::after {
+  content: "]";
+}
+div.footnotes {
+  border-top: 1px solid var(--dark);
+  margin: 6rem 0;
+}
+div.footnote a.footnote {
+  float: left;
+
 }
