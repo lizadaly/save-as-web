@@ -13,6 +13,7 @@ Demo at [https://lizadaly.github.io/save-as-web/case-elider/](https://lizadaly.g
 
 ## TODO
 
+1. Click or ESC after selection should close elision modal
 1. "Add all to clipboard" button (would only select the case content)
 1. "Download as HTML" (ditto)
 1. Auto-save in browser local storage
