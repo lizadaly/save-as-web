@@ -1,95 +1,93 @@
 :root {
-    --sans-font-family: "Helvetica", sans-serif;
-    --font-size: 1.4rem;
-    --line-height: 140%;
-    --ui-color: rgb(255, 136, 0);
-    --light: white;
-    --dark: rgb(20,20,20);
+  --sans-font-family: "Helvetica", sans-serif;
+  --font-size: 1.4rem;
+  --line-height: 140%;
+  --ui-color: rgb(255, 136, 0);
+  --light: white;
+  --dark: rgb(20, 20, 20);
 }
 
 body {
-    font-family: var(--sans-font-family);
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-    color: var(--dark);
+  font-family: var(--sans-font-family);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  color: var(--dark);
 }
 form {
-    text-align: center;
-    display: block;
+  text-align: center;
+  display: block;
 }
 article {
-    margin: 5vh 20vw 10vh 20vw;
+  margin: 5vh 20vw 10vh 20vw;
 }
 .citations {
-    font-style: italic;
+  font-style: italic;
 }
 mark {
-    background: rgb(255, 241, 202);
-}
-mark:has(.elided-content) {
-    cursor: pointer;
-}
-.elided-content {
-    display: none;
+  background: rgb(255, 241, 202);
 }
 
 button {
-    padding: 10px;
-    background: var(--ui-color);
-    color: white;
-    border: none;
+  padding: 10px;
+  background: var(--ui-color);
+  color: white;
+  border: none;
 }
 button.elide {
-    position: absolute;
-    left: 10%;
+  position: absolute;
+  left: 10%;
 }
 hgroup {
-    text-align: center;
-    line-height: 110%;
+  text-align: center;
+  line-height: 110%;
 }
 nav {
-    margin: 5vh auto;
-    height: 5vh;
+  margin: 5vh auto;
+  height: 5vh;
 }
-
 
 .results {
-    font-size: smaller;
+  font-size: smaller;
 }
 .results li {
-    margin-bottom: .75em;
+  margin-bottom: 0.75em;
 }
 .results li:hover {
-    background: lightyellow;
+  background: lightyellow;
 }
 
 button.modal {
-    position: absolute;
+  position: absolute;
 }
 .elision-note {
-    background: lightyellow;
-    text-align: center;
-    padding: .5em;
-    font-size: smaller;
+  background: lightyellow;
+  text-align: center;
+  padding: 0.5em;
+  font-size: smaller;
 }
 footer {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    background: rgb(250,250,250);
-    padding: .25rem;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  background: rgb(250, 250, 250);
+  padding: 0.25rem;
 }
 footer p {
-    text-align: center; 
-
+  text-align: center;
 }
-del {
-    text-decoration: none;
-
+del.elided-content {
+  text-decoration: none;
 }
-del * {
-    display: none;
+del.elided-content {
+  display: none;
 }
-del::after {
-    content: " ... ";
+ins.elide-marker::after {
+  content: " ... ";
+  background: rgb(255, 241, 202);
+  margin: 0 0.5em;
+}
+ins.elide-marker {
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }

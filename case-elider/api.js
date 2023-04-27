@@ -10,15 +10,14 @@ async function search(query) {
   document.querySelector(".case").replaceChildren()
 
   const resp = await fetch(
-    `${SEARCH_ENDPOINT}?` + new URLSearchParams({
-      q: query
+    `${SEARCH_ENDPOINT}?` +
+    new URLSearchParams({
+      q: query,
     })
   )
 
   if (resp.ok) {
-    const {
-      results
-    } = await resp.json()
+    const { results } = await resp.json()
     submit.value = "Search"
     document.querySelector("form").reset()
 
@@ -26,12 +25,7 @@ async function search(query) {
     const list = document.createElement("ol")
 
     for (const result of results) {
-      const {
-        id,
-        caseName,
-        citation,
-        dateFiled
-      } = result
+      const { id, caseName, citation, dateFiled } = result
 
       const item = document.createElement("li")
       const button = document.createElement("button")
@@ -40,21 +34,19 @@ async function search(query) {
 
       item.innerHTML = `
             ${caseName} <span class="citations">${citation
-        .slice(0, 2)
-        .join(", ")}</span> 
+          .slice(0, 2)
+          .join(", ")}</span> 
             <span class="date">(${new Date(dateFiled).toLocaleDateString(
-              "en-US",
-              { year: "numeric", month: "long", day: "numeric" }
-            )})</span>
+            "en-US",
+            { year: "numeric", month: "long", day: "numeric" }
+          )})</span>
             `
 
       button.addEventListener("click", async (e) => {
         const id = e.target.getAttribute("data-id")
         const resp = await fetch(`${OPINION_ENDPOINT}${id}/`)
         if (resp.ok) {
-          const {
-            html
-          } = await resp.json()
+          const { html } = await resp.json()
 
           const section = document.createElement("section")
           section.innerHTML = html
@@ -96,12 +88,17 @@ const selector = () => {
     const ranges = []
 
     if (start.nodeType != Node.TEXT_NODE) {
-      start = document.createNodeIterator(start, NodeFilter.SHOW_TEXT).nextNode() || start
+      start =
+        document.createNodeIterator(start, NodeFilter.SHOW_TEXT).nextNode() ||
+        start
     }
     if (end.nodeType != Node.TEXT_NODE) {
       let lastText
 
-      const endIter = document.createNodeIterator(document.querySelector('article'), NodeFilter.SHOW_ALL)
+      const endIter = document.createNodeIterator(
+        document.querySelector("article"),
+        NodeFilter.SHOW_ALL
+      )
       while ((node = endIter.nextNode()) && node != end) {
         if (node.nodeType === Node.TEXT_NODE) {
           lastText = node
@@ -110,9 +107,7 @@ const selector = () => {
       end = lastText
     }
     if (start.nodeType != Node.TEXT_NODE || end.nodeType != Node.TEXT_NODE) {
-      console.error("Could not find text nodes in one of")
-      console.error(start)
-      console.error(end)
+      console.error("Could not find text nodes in one of: ", start, end)
     }
 
     const iter = document.createNodeIterator(
@@ -146,14 +141,13 @@ const selector = () => {
       if (node === end) {
         foundEnd = true
       }
-
     }
-    let mark 
+    let mark
     const elisionId = crypto.randomUUID()
 
     for (const range of ranges) {
       mark = document.createElement("mark")
-      mark.setAttribute('data-selection-id', elisionId)
+      mark.setAttribute("data-selection-id", elisionId)
       range.surroundContents(mark)
     }
     const button = document.createElement("button")
@@ -167,27 +161,34 @@ const selector = () => {
 }
 
 const elider = (uuid, button) => {
-  for (const mark of document.querySelectorAll(`[data-selection-id="${uuid}"]`)) {
-    const del = document.createElement('del')
+  let del
+  for (const mark of document.querySelectorAll(
+    `[data-selection-id="${uuid}"]`
+  )) {
+    del = document.createElement("del")
+    del.setAttribute("data-selection-id", uuid)
+    del.classList.add("elided-content")
     const range = new Range()
     range.selectNode(mark)
     range.surroundContents(del)
+    del.insertAdjacentHTML("afterbegin", mark.innerHTML)
+    mark.remove()
   }
-  // const container = document.createElement("span")
-  // container.classList.add("elided-content")
-  // container.innerHTML = mark.innerHTML
-  // mark.replaceChildren(" ... ", container)
-  // mark.title = "Click to unelide"
-  // mark.addEventListener("click", (e) => {
-  //   mark.insertAdjacentHTML(
-  //     "beforeBegin",
-  //     mark.querySelector(".elided-content").innerHTML
-  //   )
-  //   mark.remove()
-  // })
-  // button.remove()
+  const ins = document.createElement("ins")
+  ins.classList.add("elide-marker")
+  ins.setAttribute("data-selection-id", uuid)
+  del.insertAdjacentElement("afterend", ins)
+  ins.title = "Click to unelide"
+  ins.addEventListener("click", () => {
+    for (const elision of document.querySelectorAll(
+      `del[data-selection-id="${uuid}"]`
+    )) {
+      elision.insertAdjacentHTML("beforeBegin", elision.innerHTML)
+      elision.remove()
+    }
+    ins.remove()
+  })
+  button.remove()
 }
 
-document
-  .querySelector("body")
-  ?.addEventListener("mouseup", selector)
+document.querySelector("body")?.addEventListener("mouseup", selector)
