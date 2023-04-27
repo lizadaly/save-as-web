@@ -11,6 +11,8 @@ select an opinion, then do a simple highlight-elide-unelide loop.
 
 Demo at [https://lizadaly.github.io/save-as-web/case-elider/](https://lizadaly.github.io/save-as-web/case-elider/)
 
+([Vite](https://vitejs.dev) is present as an optional dependency for use during development, but is not required to run the app.)
+
 ## TODO
 
 1. Click or ESC after selection should close elision modal
