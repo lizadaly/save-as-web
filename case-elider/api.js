@@ -7,7 +7,7 @@ async function search(query) {
   submit.value = "Searching"
 
   document.querySelector(".results").replaceChildren()
-  document.querySelector(".case").replaceChildren()
+  document.querySelector("article").replaceChildren()
 
   const resp = await fetch(
     `${SEARCH_ENDPOINT}?` +
@@ -21,14 +21,14 @@ async function search(query) {
     submit.value = "Search"
     document.querySelector("form").reset()
 
-    const resultsContainer = document.querySelector(".results")
-    const list = document.createElement("ol")
+    const list = document.querySelector(".results")
 
     for (const result of results) {
       const { id, caseName, citation, dateFiled } = result
 
       const item = document.createElement("li")
       const button = document.createElement("button")
+      button.classList.add('edit')
       button.setAttribute("data-id", id)
       button.innerText = "Edit"
 
@@ -42,19 +42,29 @@ async function search(query) {
           )})</span>
             `
 
+      // Get the selected case 
       button.addEventListener("click", async (e) => {
-        const id = e.target.getAttribute("data-id")
+        const button = e.target
+        const id = button.getAttribute("data-id")
+        const item = button.closest('li')
+
         const resp = await fetch(`${OPINION_ENDPOINT}${id}/`)
         if (resp.ok) {
-          const { html } = await resp.json()
+          const { html, absolute_url } = await resp.json()
 
           const section = document.createElement("section")
           section.innerHTML = html
           document.body.addEventListener("mouseup", selector)
+          const article = document.querySelector("article.case")
+          article.replaceChildren(section)
+          list.replaceChildren()
+          document.querySelector('.case-citation').append(item)
+          item.classList.add('selected')
+          //article.prepend(item)
+          item.insertAdjacentHTML("afterend", `
+          <a class="courtlistener-url" href="https://courtlistener.com${absolute_url}">View on CourtListener</a>
+          `)
 
-          const caseContainer = document.querySelector(".case")
-          caseContainer.append(section)
-          resultsContainer.replaceChildren()
         } else {
           console.error(resp)
         }
@@ -62,7 +72,6 @@ async function search(query) {
       item.prepend(button)
       list.append(item)
     }
-    resultsContainer.append(list)
   } else {
     console.error(resp)
   }

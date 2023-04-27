@@ -5,7 +5,7 @@ select an opinion, then do a simple highlight-elide-unelide loop.
 
 1. Search for a case (e.g. "brown v board")
 2. Select it from the results list
-3. Find some content to elide and highlight it (for now, only select within a single paragraph or block-level element)
+3. Find some content to elide and highlight it
 4. Once highlighted, click "Elide"
 5. The content will now be elided. Click on the "..." you created to unelide.
 
@@ -17,5 +17,9 @@ Demo at [https://lizadaly.github.io/save-as-web/case-elider/](https://lizadaly.g
 1. "Download as HTML" (ditto)
 1. Auto-save in browser local storage
 1. Allow retrieving previous cases from local storage
-1. Support non-contained ranges across DOM nodes
 1. Serialize CourtListener ID and annotation data into a URL blob that can be hot-linked and iframed
+1. Better clean up stray elided markup
+
+## TODONE
+
+1. Support non-contained ranges across DOM nodes

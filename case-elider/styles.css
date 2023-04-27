@@ -1,10 +1,12 @@
 :root {
-  --sans-font-family: "Helvetica", sans-serif;
+  --sans-font-family: "avenir", sans-serif;
+  --serif-font-family: "baskerville", serif;
   --font-size: 1.4rem;
   --line-height: 140%;
   --ui-color: rgb(255, 136, 0);
   --light: white;
   --dark: rgb(20, 20, 20);
+  --mid: rgb(213, 222, 241);
 }
 
 body {
@@ -12,13 +14,41 @@ body {
   font-size: var(--font-size);
   line-height: var(--line-height);
   color: var(--dark);
+  margin: 0;
+  padding: 0;
+  box-sizing: content-box;    
+
 }
 form {
   text-align: center;
   display: block;
+  padding: 2em 0;
+  width: 100%;
+  background: var(--mid);
+}
+input[type="text"] {
+  padding: 10px;
+  width: 30ch;
+  font-size: 1rem;
+  border: 0;
+}
+input[type="submit"] {
+  padding: 10px;
+  width: 10ch;
+  font-size: 1rem;
+  background: var(--light);
+  border: 0;
+}
+
+article:empty {
+  box-shadow: none;
 }
 article {
-  margin: 5vh 20vw 10vh 20vw;
+  max-width: 80vw;
+  margin: 0 10vw;
+  padding: 7vh 10vw;
+  font-family: var(--serif-font-family);
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 10px 0px, rgba(14, 30, 37, 0.2) 0px 2px 8px 0px;
 }
 .citations {
   font-style: italic;
@@ -26,31 +56,62 @@ article {
 mark {
   background: rgb(255, 241, 202);
 }
-
+.courtlistener-url {
+  display: block;
+  font-size: smaller;
+  margin: 0 auto 2rem auto;
+  text-align: center;
+}
 button {
   padding: 10px;
   background: var(--ui-color);
   color: white;
   border: none;
 }
+button.edit {
+  margin-right: 1em;
+}
+button.edit:hover {
+  outline: 2px solid var(--ui-color);
+}
+/* Indicate which result was selected by deemphasizes the ones not clicked on */
+.results:has(button.edit:focus) li {
+  opacity: 0.5;
+}
+.results li:has(button.edit:focus) {
+  opacity: 1;
+}
+button.edit:focus {
+  filter: brightness(0.85);
+}
+
 button.elide {
   position: absolute;
   left: 10%;
 }
-hgroup {
-  text-align: center;
-  line-height: 110%;
+.case-citation {
+  font-weight: normal;
+  font-size: 1em;
 }
-nav {
-  margin: 5vh auto;
-  height: 5vh;
-}
-
 .results {
   font-size: smaller;
+  width: 80vw;
+  margin: 5vh auto;
 }
 .results li {
   margin-bottom: 0.75em;
+}
+.case-citation  li.selected {
+  list-style-type: none;
+  text-align: center;
+  margin: 1em 0 0 0;
+}
+.case-citation li.selected button {
+  display: none;
+}
+
+.results li + li:last-of-type {
+  margin-bottom: 2em;
 }
 .results li:hover {
   background: lightyellow;
@@ -90,4 +151,20 @@ ins.elide-marker {
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
+}
+
+/* Case content */
+.case_cite, .docket, .prelims, .date {
+  margin: 0;
+  padding: 0;
+}
+.parties, .center {
+  text-align: center;
+}
+.indent {
+  text-indent: 2em;
+}
+.num .num {
+  float: left;
+  margin-left: -2em;
 }
