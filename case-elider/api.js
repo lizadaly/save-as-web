@@ -18,14 +18,21 @@ async function search(query) {
   )
 
   if (resp.ok) {
-    const { results } = await resp.json()
+    const {
+      results
+    } = await resp.json()
     submit.value = "Search"
     document.querySelector("form").reset()
 
     const list = document.querySelector(".results")
 
     for (const result of results) {
-      const { id, caseName, citation, dateFiled } = result
+      const {
+        id,
+        caseName,
+        citation,
+        dateFiled
+      } = result
 
       const item = document.createElement("li")
       const button = document.createElement("button")
@@ -51,10 +58,15 @@ async function search(query) {
 
         const resp = await fetch(`${OPINION_ENDPOINT}${id}/`)
         if (resp.ok) {
-          const { html, absolute_url } = await resp.json()
+          const {
+            html,
+            html_lawbox,
+            html_with_citations,
+            absolute_url
+          } = await resp.json()
 
           const section = document.createElement("section")
-          section.innerHTML = html
+          section.innerHTML = html || html_lawbox || html_with_citations
           document.body.addEventListener("mouseup", selector)
           const article = document.querySelector("article.case")
           article.replaceChildren(section)
@@ -173,8 +185,8 @@ const selector = () => {
 const elider = (uuid, button) => {
   let del
   for (const mark of document.querySelectorAll(
-    `[data-selection-id="${uuid}"]`
-  )) {
+      `[data-selection-id="${uuid}"]`
+    )) {
     del = document.createElement("del")
     del.setAttribute("data-selection-id", uuid)
     del.classList.add("elided-content")
@@ -191,8 +203,8 @@ const elider = (uuid, button) => {
   ins.title = "Click to unelide"
   ins.addEventListener("click", () => {
     for (const elision of document.querySelectorAll(
-      `del[data-selection-id="${uuid}"]`
-    )) {
+        `del[data-selection-id="${uuid}"]`
+      )) {
       elision.insertAdjacentHTML("beforeBegin", elision.innerHTML)
       elision.remove()
     }
