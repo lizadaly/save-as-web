@@ -42,7 +42,7 @@ async function search(query) {
 
       item.innerHTML = `
             ${caseName} <span class="citations">${citation
-          .slice(0, 2)
+          ?.slice(0, 2)
           .join(", ")}</span> 
             <span class="date">(${new Date(dateFiled).toLocaleDateString(
             "en-US",
@@ -62,11 +62,12 @@ async function search(query) {
             html,
             html_lawbox,
             html_with_citations,
+            html_columbia,
             absolute_url
           } = await resp.json()
 
           const section = document.createElement("section")
-          section.innerHTML = html || html_lawbox || html_with_citations
+          section.innerHTML = html || html_lawbox || html_with_citations || html_columbia
           document.body.addEventListener("mouseup", selector)
           const article = document.querySelector("article.case")
           article.replaceChildren(section)
