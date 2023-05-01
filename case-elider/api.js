@@ -96,6 +96,10 @@ const selector = () => {
   const sel = document.getSelection()
   if (sel.rangeCount > 0 && !sel.getRangeAt(0).collapsed) {
     const containingRange = sel.getRangeAt(0)
+
+    if (!document.querySelector('article.case').contains(containingRange.commonAncestorContainer)) {
+      return
+    }
     let start = sel.anchorNode
     let end = sel.focusNode
 
