@@ -74,7 +74,6 @@ async function search(query) {
           list.replaceChildren()
           document.querySelector('.case-citation').append(item)
           item.classList.add('selected')
-          //article.prepend(item)
           item.insertAdjacentHTML("afterend", `
           <a class="courtlistener-url" href="https://courtlistener.com${absolute_url}">View on CourtListener</a>
           `)
@@ -90,14 +89,6 @@ async function search(query) {
     console.error(resp)
   }
 }
-
-const form = document.querySelector("form")
-
-form?.addEventListener("submit", (e) => {
-  e.preventDefault()
-  const formData = new FormData(form)
-  search(formData.get("query"))
-})
 
 const selector = () => {
   const sel = document.getSelection()
@@ -215,3 +206,10 @@ const elider = (uuid, button) => {
 }
 
 document.querySelector("body")?.addEventListener("mouseup", selector)
+
+
+// Use the URL for search results
+const params = new URL(document.location).searchParams
+if (params.get("query")) {
+  search(params.get("query"))
+}
