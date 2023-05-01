@@ -58,7 +58,7 @@ async function showResult (id) {
   const resp = await fetch(`${OPINION_ENDPOINT}${id}/`)
   if (resp.ok) {
     const data = await resp.json()
-
+    document.querySelector('button.clip').classList.remove('hidden')
     const section = document.createElement('section')
     section.innerHTML = data.html || data.html_lawbox || data.html_with_citations || data.html_columbia
     document.body.addEventListener('mouseup', selector)
@@ -240,3 +240,15 @@ if (params.get('query')) {
 } else if (params.get('result')) {
   showResult(params.get('result'))
 }
+
+document.querySelector('button.clip').addEventListener('click', (e) => {
+  const text = document.querySelector('article.case > section')
+  const content = text.innerHTML
+  navigator.clipboard.writeText(content)
+  e.target.textContent = 'Added!'
+  text.classList.add('selected')
+  setTimeout(() => {
+    e.target.textContent = 'Add case to clipboard'
+    text.classList.remove('selected')
+  }, 1000)
+})

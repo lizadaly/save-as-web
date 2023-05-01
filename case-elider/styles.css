@@ -6,7 +6,10 @@
   --ui-color: rgb(255, 136, 0);
   --light: white;
   --dark: rgb(20, 20, 20);
+  --toned: rgb(102, 99, 186);
   --mid: rgb(213, 222, 241);
+  --marked: rgb(255, 241, 202);
+  --light-gray: rgb(250, 250, 250);
 }
 
 body {
@@ -19,13 +22,25 @@ body {
   box-sizing: content-box;    
 
 }
+header {
+  width: 100%;
+  background: var(--toned);
+  font-size: smaller;
+  display: flex;
+  justify-content: space-around;
+}
+header a {
+  color: white;
+  text-decoration: none;
+}
 form {
   text-align: center;
   display: block;
-  padding: 2em 0;
+  padding: 1em 0;
   width: 100%;
   background: var(--mid);
 }
+
 input[type="text"] {
   padding: 10px;
   width: 30ch;
@@ -40,7 +55,7 @@ input[type="submit"] {
   border: 0;
 }
 
-article:empty {
+article.case:empty {
   box-shadow: none;
 }
 article.case {
@@ -50,11 +65,14 @@ article.case {
   font-family: var(--serif-font-family);
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 10px 0px, rgba(14, 30, 37, 0.2) 0px 2px 8px 0px;
 }
+.selected {
+  background: var(--marked);
+}
 .citations {
   font-style: italic;
 }
 mark {
-  background: rgb(255, 241, 202);
+  background: var(--marked);
 }
 .courtlistener-url {
   display: block;
@@ -139,8 +157,11 @@ footer {
   width: 100%;
   position: fixed;
   bottom: 0;
-  background: rgb(250, 250, 250);
-  padding: 0.25rem;
+  background: var(--light-gray);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid var(--mid);
 }
 footer p {
   text-align: center;
@@ -162,6 +183,9 @@ ins.elide-marker {
   text-decoration: none;
   display: inline-block;
   text-indent: 0;
+}
+.hidden {
+  visibility: hidden;
 }
 
 /* Case content */
