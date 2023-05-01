@@ -170,18 +170,59 @@ const selector = () => {
       mark.setAttribute("data-selection-id", elisionId)
       range.surroundContents(mark)
     }
-    const button = document.createElement("button")
-    button.classList.add("elide")
-    button.innerText = "Elide this"
-    button.addEventListener("click", () => elider(elisionId, button))
-    mark.insertAdjacentElement("afterEnd", button)
+    const controls = document.createElement('div')
+    controls.classList.add('controls')
+    mark.insertAdjacentElement("beforeBegin", controls)
+
+    const elideButton = document.createElement("button")
+    elideButton.classList.add("elide")
+    elideButton.innerText = "Elide this"
+    elideButton.addEventListener("click", () => elider(elisionId, controls))
+
+    const cancelButton = document.createElement("button")
+    cancelButton.classList.add("cancel")
+    cancelButton.innerText = "Cancel"
+    cancelButton.addEventListener("click", () => cancel(elisionId, controls))
+
+    requestAnimationFrame(() => {
+      // Allow ESC to cancel pending elision
+      const canceller = (elisionId, controls, e) => {
+        if (e.key === "Escape") {
+          cancel(elisionId, controls)
+          document.body.removeEventListener('keydown', canceller)
+        }
+      }
+
+      document.body.addEventListener('click', () => {
+        cancel(elisionId, controls)
+        document.body.removeEventListener('keydown', canceller)
+      }, {
+        once: true
+      })
+      document.body.addEventListener('keydown', canceller.bind(null, elisionId, controls))
+
+    })
+
+    controls.append(elideButton, cancelButton)
 
     sel.removeAllRanges()
   }
 }
 
-const elider = (uuid, button) => {
+const cancel = (uuid, controls) => {
+  controls.remove()
+  for (const selection of document.querySelectorAll(
+      `mark[data-selection-id="${uuid}"]`
+    )) {
+    selection.insertAdjacentHTML("beforeBegin", selection.innerHTML)
+    selection.remove()
+  }
+}
+
+const elider = (uuid, controls) => {
   let del
+  controls.remove()
+
   for (const mark of document.querySelectorAll(
       `[data-selection-id="${uuid}"]`
     )) {
@@ -208,7 +249,6 @@ const elider = (uuid, button) => {
     }
     ins.remove()
   })
-  button.remove()
 }
 
 document.querySelector("body")?.addEventListener("mouseup", selector)

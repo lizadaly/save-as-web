@@ -85,10 +85,21 @@ button.edit:focus {
   filter: brightness(0.85);
 }
 
-button.elide {
+div.controls {
   position: absolute;
-  left: 10%;
+  left: 5%;
+  display: flex;
+  gap: 10px;
+
 }
+button.elide {
+
+}
+
+button.cancel {
+  background: gray;
+}
+
 .case-citation {
   font-weight: normal;
   font-size: 1em;
