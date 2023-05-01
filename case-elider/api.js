@@ -36,9 +36,16 @@ async function search(query) {
 
       const item = document.createElement("li")
       const button = document.createElement("button")
+      button.setAttribute("role", "button")
       button.classList.add('edit')
       button.setAttribute("data-id", id)
       button.innerText = "Edit"
+      button.addEventListener('click', (e) => {
+        const params = new URLSearchParams({
+          result: id
+        })
+        location.href = location.pathname + `?${params.toString()}`
+      })
 
       item.innerHTML = `
             ${caseName} <span class="citations">${citation
@@ -50,41 +57,36 @@ async function search(query) {
           )})</span>
             `
 
-      // Get the selected case 
-      button.addEventListener("click", async (e) => {
-        const button = e.target
-        const id = button.getAttribute("data-id")
-        const item = button.closest('li')
-
-        const resp = await fetch(`${OPINION_ENDPOINT}${id}/`)
-        if (resp.ok) {
-          const {
-            html,
-            html_lawbox,
-            html_with_citations,
-            html_columbia,
-            absolute_url
-          } = await resp.json()
-
-          const section = document.createElement("section")
-          section.innerHTML = html || html_lawbox || html_with_citations || html_columbia
-          document.body.addEventListener("mouseup", selector)
-          const article = document.querySelector("article.case")
-          article.replaceChildren(section)
-          list.replaceChildren()
-          document.querySelector('.case-citation').append(item)
-          item.classList.add('selected')
-          item.insertAdjacentHTML("afterend", `
-          <a class="courtlistener-url" href="https://courtlistener.com${absolute_url}">View on CourtListener</a>
-          `)
-
-        } else {
-          console.error(resp)
-        }
-      })
       item.prepend(button)
       list.append(item)
     }
+  } else {
+    console.error(resp)
+  }
+}
+
+
+async function showResult(id) {
+
+  const resp = await fetch(`${OPINION_ENDPOINT}${id}/`)
+  if (resp.ok) {
+    const {
+      html,
+      html_lawbox,
+      html_with_citations,
+      html_columbia,
+      absolute_url
+    } = await resp.json()
+
+    const section = document.createElement("section")
+    section.innerHTML = html || html_lawbox || html_with_citations || html_columbia
+    document.body.addEventListener("mouseup", selector)
+    const article = document.querySelector("article.case")
+    article.replaceChildren(section)
+    article.insertAdjacentHTML("beforebegin", `
+     <a class="courtlistener-url" href="https://courtlistener.com${absolute_url}">View on CourtListener</a>
+    `)
+
   } else {
     console.error(resp)
   }
@@ -212,4 +214,6 @@ document.querySelector("body")?.addEventListener("mouseup", selector)
 const params = new URL(document.location).searchParams
 if (params.get("query")) {
   search(params.get("query"))
+} else if (params.get("result")) {
+  showResult(params.get("result"))
 }
