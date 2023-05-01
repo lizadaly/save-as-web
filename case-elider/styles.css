@@ -215,10 +215,10 @@ a.footnote {
   padding: 0 .25em;
 }
 
-a.footnote::before {
+a.footnote:not(:has(del))::before {
   content: "[";
 }
-a.footnote::after {
+a.footnote:not(:has(del))::after {
   content: "]";
 }
 div.footnotes {

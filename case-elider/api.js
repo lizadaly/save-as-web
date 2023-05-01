@@ -78,15 +78,24 @@ async function showResult (id) {
 const selector = () => {
   const sel = document.getSelection()
   if (sel.rangeCount > 0 && !sel.getRangeAt(0).collapsed) {
-    const containingRange = sel.getRangeAt(0)
+    let node, foundStart, foundEnd, start, end, startOffset, endOffset
 
+    const containingRange = sel.getRangeAt(0)
     if (!document.querySelector('article.case').contains(containingRange.commonAncestorContainer)) {
       return
     }
-    let start = sel.anchorNode
-    let end = sel.focusNode
 
-    let node, foundStart, foundEnd
+    if (sel.anchorNode.compareDocumentPosition(sel.focusNode) === Node.DOCUMENT_POSITION_FOLLOWING) {
+      start = sel.anchorNode
+      end = sel.focusNode
+      startOffset = sel.anchorOffset
+      endOffset = sel.focusOffset
+    } else {
+      start = sel.focusNode
+      end = sel.anchorNode
+      startOffset = sel.focusOffset
+      endOffset = sel.anchorOffset
+    }
 
     const ranges = []
 
@@ -129,13 +138,13 @@ const selector = () => {
       const range = new Range()
 
       if (node === start) {
-        range.setStart(node, sel.anchorOffset)
+        range.setStart(node, startOffset)
       } else {
         range.setStart(node, 0)
       }
 
       if (node === end) {
-        range.setEnd(node, sel.focusOffset)
+        range.setEnd(node, endOffset)
       } else {
         range.setEnd(node, node.textContent?.length)
       }
