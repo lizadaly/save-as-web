@@ -43,7 +43,7 @@ input[type="submit"] {
 article:empty {
   box-shadow: none;
 }
-article {
+article.case {
   max-width: 80vw;
   margin: 0 10vw;
   padding: 7vh 10vw;
@@ -90,6 +90,8 @@ div.controls {
   left: 5%;
   display: flex;
   gap: 10px;
+  background: white;
+  padding: 10px;
 
 }
 button.cancel {
