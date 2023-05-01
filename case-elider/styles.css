@@ -3,13 +3,14 @@
   --serif-font-family: "baskerville", serif;
   --font-size: 1.4rem;
   --line-height: 140%;
-  --ui-color: rgb(255, 136, 0);
-  --light: white;
+  --ui-color: rgb(247, 154, 48);
+  --light: rgb(250, 249, 240);
   --dark: rgb(20, 20, 20);
   --toned: rgb(102, 99, 186);
   --mid: rgb(213, 222, 241);
   --marked: rgb(255, 241, 202);
   --light-gray: rgb(250, 250, 250);
+  --dark-gray: gray;
 }
 
 body {
@@ -30,7 +31,7 @@ header {
   justify-content: space-around;
 }
 header a {
-  color: white;
+  color: var(--light);
   text-decoration: none;
 }
 form {
@@ -58,6 +59,10 @@ input[type="submit"] {
 article.case:empty {
   box-shadow: none;
 }
+article.case:empty + footer button {
+  visibility: hidden;
+}
+
 article.case {
   max-width: 80vw;
   margin: 0 10vw;
@@ -83,8 +88,9 @@ mark {
 button {
   padding: 10px;
   background: var(--ui-color);
-  color: white;
+  color: var(--light);
   border: none;
+  font-size: medium;
 }
 button.edit {
   margin-right: 1em;
@@ -108,12 +114,12 @@ div.controls {
   left: 5%;
   display: flex;
   gap: 10px;
-  background: white;
+  background: var(--light);
   padding: 10px;
 
 }
 button.cancel {
-  background: gray;
+  background: var(--dark-gray);
 }
 
 .case-citation {
@@ -160,11 +166,11 @@ footer {
   background: var(--light-gray);
   padding: 1rem;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   border-top: 1px solid var(--mid);
 }
-footer p {
-  text-align: center;
+footer button {
+  background: var(--toned);
 }
 del.elided-content {
   text-decoration: none;

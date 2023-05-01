@@ -58,12 +58,12 @@ async function showResult (id) {
   const resp = await fetch(`${OPINION_ENDPOINT}${id}/`)
   if (resp.ok) {
     const data = await resp.json()
-    document.querySelector('button.clip').classList.remove('hidden')
     const section = document.createElement('section')
     section.innerHTML = data.html || data.html_lawbox || data.html_with_citations || data.html_columbia
     document.body.addEventListener('mouseup', selector)
     const article = document.querySelector('article.case')
     article.replaceChildren(section)
+    article.setAttribute('data-id', id)
     article.insertAdjacentHTML('beforebegin', `
      <a class="courtlistener-url" 
         href="https://courtlistener.com${data.absolute_url}">
@@ -250,5 +250,25 @@ document.querySelector('button.clip').addEventListener('click', (e) => {
   setTimeout(() => {
     e.target.textContent = 'Add case to clipboard'
     text.classList.remove('selected')
+  }, 1000)
+})
+
+document.querySelector('button.download').addEventListener('click', (e) => {
+  const text = document.querySelector('article.case')
+  const id = text.getAttribute('data-id')
+  const content = text.innerHTML
+  const blob = new Blob([content], { type: 'text/html' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.download = `courtlistener-${id}`
+  link.href = url
+  document.body.append(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+
+  e.target.textContent = 'Downloading...'
+  setTimeout(() => {
+    e.target.textContent = 'Download as HTML'
   }, 1000)
 })
