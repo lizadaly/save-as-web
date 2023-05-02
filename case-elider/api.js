@@ -63,6 +63,8 @@ async function showResult (id) {
     document.body.addEventListener('mouseup', selector)
     const article = document.querySelector('article.case')
     article.replaceChildren(section)
+    store(id, section.outerHTML)
+
     article.setAttribute('data-id', id)
     article.insertAdjacentHTML('beforebegin', `
      <a class="courtlistener-url" 
@@ -73,6 +75,24 @@ async function showResult (id) {
   } else {
     console.error(resp)
   }
+}
+
+const store = (id, content) => {
+  localStorage.setItem(`result-${id}`, content)
+}
+
+const retrieve = (id) => {
+  const content = localStorage.getItem(`result-${id}`)
+  if (!content) {
+    return false
+  }
+  const child = document.createElement('section')
+  const article = document.querySelector('article.case')
+  article.replaceChildren(child)
+  article.setAttribute('data-id', id)
+  child.outerHTML = content
+  addHandlers()
+  return true  
 }
 
 const selector = () => {
@@ -229,17 +249,33 @@ const elider = (uuid, controls) => {
   ins.setAttribute('data-selection-id', uuid)
   del.insertAdjacentElement('afterend', ins)
   ins.title = 'Click to unelide'
-  ins.addEventListener('click', () => {
-    for (const elision of document.querySelectorAll(
-        `del[data-selection-id="${uuid}"]`
-    )) {
-      elision.insertAdjacentHTML('beforeBegin', elision.innerHTML)
-      elision.remove()
-    }
-    ins.remove()
-  })
-}
 
+  requestAnimationFrame(() => {
+    const article = document.querySelector('article.case')
+    const id = article.getAttribute('data-id')
+    store(id, article.innerHTML)
+    addHandlers()
+  })
+
+  
+
+}
+const addHandlers = () => {
+  // Find all the elide handlers and refresh them
+  for (const ins of document.querySelectorAll('article.case ins')) {
+    const uuid = ins.getAttribute("data-selection-id")
+    ins.addEventListener('click', () => {
+      for (const elision of document.querySelectorAll(
+          `del[data-selection-id="${uuid}"]`
+      )) {
+        elision.insertAdjacentHTML('beforeBegin', elision.innerHTML)
+        elision.remove()
+      }
+      ins.remove()
+      store(id)
+    })
+  }
+}
 document.querySelector('body')?.addEventListener('mouseup', selector)
 
 // Use the URL for search results
@@ -247,7 +283,11 @@ const params = new URL(document.location).searchParams
 if (params.get('query')) {
   search(params.get('query'))
 } else if (params.get('result')) {
-  showResult(params.get('result'))
+  const cached = retrieve(params.get('result'))
+  if (!cached) {
+    showResult(params.get('result'))
+  }
+
 }
 
 document.querySelector('button.clip').addEventListener('click', (e) => {
@@ -281,3 +321,4 @@ document.querySelector('button.download').addEventListener('click', (e) => {
     e.target.textContent = 'Download as HTML'
   }, 1000)
 })
+
