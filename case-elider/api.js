@@ -91,7 +91,7 @@ const retrieve = (id) => {
   article.replaceChildren(child)
   article.setAttribute('data-id', id)
   child.outerHTML = content
-  addHandlers()
+  addHandlers(id)
   return true  
 }
 
@@ -105,16 +105,29 @@ const selector = () => {
       return
     }
 
-    if (sel.anchorNode.compareDocumentPosition(sel.focusNode) === Node.DOCUMENT_POSITION_FOLLOWING) {
-      start = sel.anchorNode
-      end = sel.focusNode
-      startOffset = sel.anchorOffset
-      endOffset = sel.focusOffset
-    } else {
+    if (sel.anchorNode.compareDocumentPosition(sel.focusNode) === Node.DOCUMENT_POSITION_PRECEDING) {
+
       start = sel.focusNode
       end = sel.anchorNode
+
       startOffset = sel.focusOffset
       endOffset = sel.anchorOffset
+    } else {
+
+      start = sel.anchorNode
+      end = sel.focusNode
+
+      // If we're within a node we may still have dragged backwards so account for that
+      if (sel.anchorNode === sel.focusNode) {
+        startOffset = Math.min(sel.anchorOffset, sel.focusOffset)
+        endOffset = Math.max(sel.focusOffset, sel.anchorOffset)
+      }
+      else {
+        startOffset = sel.anchorOffset
+        endOffset = sel.focusOffset
+      }
+
+
     }
 
     const ranges = []
@@ -254,13 +267,13 @@ const elider = (uuid, controls) => {
     const article = document.querySelector('article.case')
     const id = article.getAttribute('data-id')
     store(id, article.innerHTML)
-    addHandlers()
+    addHandlers(id)
   })
 
   
 
 }
-const addHandlers = () => {
+const addHandlers = (id) => {
   // Find all the elide handlers and refresh them
   for (const ins of document.querySelectorAll('article.case ins')) {
     const uuid = ins.getAttribute("data-selection-id")
