@@ -78,6 +78,12 @@ async function showResult (id) {
 }
 
 const store = (id, content) => {
+  if (!content) {
+    content = document.querySelector('article.case section')?.innerHTML
+    if (!content) {
+      console.warn(`Tried to serialize content for ${id} but there wasn't any content`)
+    }
+  }
   localStorage.setItem(`result-${id}`, content)
 }
 
@@ -126,7 +132,6 @@ const selector = () => {
         startOffset = sel.anchorOffset
         endOffset = sel.focusOffset
       }
-
 
     }
 
