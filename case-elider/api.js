@@ -12,18 +12,27 @@ async function search (query) {
 
   const resp = await fetch(
     `${SEARCH_ENDPOINT}?` +
-    new URLSearchParams({ q: query })
+    new URLSearchParams({
+      q: query
+    })
   )
 
   if (resp.ok) {
-    const { results } = await resp.json()
+    const {
+      results
+    } = await resp.json()
     submit.value = 'Search'
     document.querySelector('form').reset()
 
     const list = document.querySelector('.results')
 
     for (const result of results) {
-      const { id, caseName, citation, dateFiled } = result
+      const {
+        id,
+        caseName,
+        citation,
+        dateFiled
+      } = result
 
       const item = document.createElement('li')
       const button = document.createElement('button')
@@ -32,7 +41,9 @@ async function search (query) {
       button.setAttribute('data-id', id)
       button.innerText = 'Edit'
       button.addEventListener('click', (e) => {
-        const params = new URLSearchParams({ result: id })
+        const params = new URLSearchParams({
+          result: id
+        })
         location.href = location.pathname + `?${params.toString()}`
       })
 
@@ -98,7 +109,7 @@ const retrieve = (id) => {
   article.setAttribute('data-id', id)
   child.outerHTML = content
   addHandlers(id)
-  return true  
+  return true
 }
 
 const selector = () => {
@@ -112,14 +123,12 @@ const selector = () => {
     }
 
     if (sel.anchorNode.compareDocumentPosition(sel.focusNode) === Node.DOCUMENT_POSITION_PRECEDING) {
-
       start = sel.focusNode
       end = sel.anchorNode
 
       startOffset = sel.focusOffset
       endOffset = sel.anchorOffset
     } else {
-
       start = sel.anchorNode
       end = sel.focusNode
 
@@ -127,12 +136,10 @@ const selector = () => {
       if (sel.anchorNode === sel.focusNode) {
         startOffset = Math.min(sel.anchorOffset, sel.focusOffset)
         endOffset = Math.max(sel.focusOffset, sel.anchorOffset)
-      }
-      else {
+      } else {
         startOffset = sel.anchorOffset
         endOffset = sel.focusOffset
       }
-
     }
 
     const ranges = []
@@ -226,13 +233,13 @@ const selector = () => {
       document.body.addEventListener('click', () => {
         cancel(elisionId, controls)
         document.body.removeEventListener('keydown', canceller)
-      }, { once: true })
+      }, {
+        once: true
+      })
       document.body.addEventListener('keydown', canceller.bind(null, elisionId, controls))
     })
 
     controls.append(elideButton, cancelButton)
-
-    
   }
 }
 
@@ -251,8 +258,7 @@ const elider = (uuid, controls) => {
   controls.remove()
 
   for (const mark of document.querySelectorAll(
-      `[data-selection-id="${uuid}"]`
-  )) {
+      `[data-selection-id="${uuid}"]`)) {
     del = document.createElement('del')
     del.setAttribute('data-selection-id', uuid)
     del.classList.add('elided-content')
@@ -274,14 +280,11 @@ const elider = (uuid, controls) => {
     store(id, article.innerHTML)
     addHandlers(id)
   })
-
-  
-
 }
 const addHandlers = (id) => {
   // Find all the elide handlers and refresh them
   for (const ins of document.querySelectorAll('article.case ins')) {
-    const uuid = ins.getAttribute("data-selection-id")
+    const uuid = ins.getAttribute('data-selection-id')
     ins.addEventListener('click', () => {
       for (const elision of document.querySelectorAll(
           `del[data-selection-id="${uuid}"]`
@@ -305,26 +308,46 @@ if (params.get('query')) {
   if (!cached) {
     showResult(params.get('result'))
   }
-
 }
 
 document.querySelector('button.clip').addEventListener('click', (e) => {
   const text = document.querySelector('article.case')
-  const content = text.innerHTML
-  navigator.clipboard.writeText(content)
-  e.target.textContent = 'Added!'
-  text.classList.add('selected')
-  setTimeout(() => {
-    e.target.textContent = 'Add case to clipboard'
-    text.classList.remove('selected')
-  }, 1000)
+
+  const data = new ClipboardItem({
+    'text/plain': new Blob(
+      [text.innerText], {
+        type: 'text/plain'
+      }
+    ),
+    'text/html': new Blob(
+      [text.outerHTML], {
+        type: 'text/html'
+      }
+    )
+  })
+
+  navigator.clipboard.write([data]).then(
+    () => {
+      e.target.textContent = 'Added!'
+      text.classList.add('selected')
+      setTimeout(() => {
+        e.target.textContent = 'Add case to clipboard'
+        text.classList.remove('selected')
+      }, 1000)
+    },
+    (err) => {
+      console.error(err)
+    }
+  )
 })
 
 document.querySelector('button.download').addEventListener('click', (e) => {
   const text = document.querySelector('article.case')
   const id = text.getAttribute('data-id')
   const content = text.innerHTML
-  const blob = new Blob([content], { type: 'text/html' })
+  const blob = new Blob([content], {
+    type: 'text/html'
+  })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.download = `courtlistener-${id}`
@@ -339,4 +362,3 @@ document.querySelector('button.download').addEventListener('click', (e) => {
     e.target.textContent = 'Download as HTML'
   }, 1000)
 })
-
