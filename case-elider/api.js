@@ -341,12 +341,19 @@ document.querySelector('button.clip').addEventListener('click', (e) => {
   )
 })
 
-document.querySelector('button.download').addEventListener('click', (e) => {
+document.querySelector('button.download-html').addEventListener('click', (e) => {
+  download('text/html', 'HTML', e.target)
+})
+document.querySelector('button.download-text').addEventListener('click', (e) => {
+  download('text/plain', 'text', e.target)
+})
+
+const download = (type, label, button) => {
   const text = document.querySelector('article.case')
   const id = text.getAttribute('data-id')
-  const content = text.innerHTML
+  const content = type === 'text/html' ? text.innerHTML : text.textContent
   const blob = new Blob([content], {
-    type: 'text/html'
+    type
   })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
@@ -357,8 +364,8 @@ document.querySelector('button.download').addEventListener('click', (e) => {
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
 
-  e.target.textContent = 'Downloading...'
+  button.textContent = 'Downloading...'
   setTimeout(() => {
-    e.target.textContent = 'Download as HTML'
+    button.textContent = `Download as ${label}`
   }, 1000)
-})
+}
