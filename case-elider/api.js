@@ -232,7 +232,7 @@ const selector = () => {
 
     controls.append(elideButton, cancelButton)
 
-    sel.removeAllRanges()
+    
   }
 }
 
@@ -309,7 +309,7 @@ if (params.get('query')) {
 }
 
 document.querySelector('button.clip').addEventListener('click', (e) => {
-  const text = document.querySelector('article.case > section')
+  const text = document.querySelector('article.case')
   const content = text.innerHTML
   navigator.clipboard.writeText(content)
   e.target.textContent = 'Added!'
