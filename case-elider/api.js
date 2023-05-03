@@ -74,7 +74,7 @@ async function showResult (id) {
     store(id, section.outerHTML)
 
     article.setAttribute('data-id', id)
-    article.insertAdjacentHTML('beforebegin', `
+    document.querySelector('.case-citation').insertAdjacentHTML('beforebegin', `
      <a class="courtlistener-url" 
         href="https://courtlistener.com${data.absolute_url}">
         View on CourtListener
@@ -196,45 +196,53 @@ const selector = () => {
         foundEnd = true
       }
     }
-    let mark
+    let mark, first
     const elisionId = crypto.randomUUID()
 
     for (const range of ranges) {
       mark = document.createElement('mark')
+      if (!first) {
+        first = mark
+      }
       mark.setAttribute('data-selection-id', elisionId)
       range.surroundContents(mark)
     }
     const controls = document.createElement('div')
     controls.classList.add('controls')
-    mark.insertAdjacentElement('beforeBegin', controls)
+    controls.style.top = `${first.getBoundingClientRect().top}px`
+    document.body.prepend(controls)
 
     const elideButton = document.createElement('button')
     elideButton.classList.add('elide')
     elideButton.innerText = 'Elide this'
-    elideButton.addEventListener('click', () => elider(elisionId, controls))
+    elideButton.addEventListener('click', () => {
+      controls.remove()
+      elider(elisionId)
+    })
+    sel.removeAllRanges()
 
     const cancelButton = document.createElement('button')
     cancelButton.classList.add('cancel')
     cancelButton.innerText = 'Cancel'
     cancelButton.addEventListener('click', () => cancel(elisionId, controls))
 
-    requestAnimationFrame(() => {
-      // Allow ESC to cancel pending elision
-      const canceller = (elisionId, controls, e) => {
-        if (e.key === 'Escape') {
-          cancel(elisionId, controls)
-          document.body.removeEventListener('keydown', canceller)
-        }
-      }
-
-      document.body.addEventListener('click', () => {
+    // Allow ESC to cancel pending elision
+    const canceller = (elisionId, controls, e) => {
+      if (e.key === 'Escape') {
         cancel(elisionId, controls)
         document.body.removeEventListener('keydown', canceller)
-      }, {
-        once: true
-      })
-      document.body.addEventListener('keydown', canceller.bind(null, elisionId, controls))
+      }
+    }
+    const clickCanceller = () => {
+      cancel(elisionId, controls)
+      document.body.removeEventListener('keydown', clickCanceller)
+    }
+    requestAnimationFrame(() => {
+      document.body.addEventListener('click', clickCanceller)
+    }, {
+      once: true
     })
+    document.body.addEventListener('keydown', canceller.bind(null, elisionId, controls))
 
     controls.append(elideButton, cancelButton)
   }
@@ -249,9 +257,8 @@ const cancel = (uuid, controls) => {
   }
 }
 
-const elider = (uuid, controls) => {
+const elider = (uuid) => {
   let del
-  controls.remove()
 
   for (const mark of document.querySelectorAll(
       `[data-selection-id="${uuid}"]`)) {
@@ -363,4 +370,35 @@ const download = (type, label, button) => {
   setTimeout(() => {
     button.textContent = `Download as ${label}`
   }, 1000)
+}
+
+const stored = Object.keys(localStorage).map(item => {
+  const id = item.replace('result-', '')
+  return id
+})
+
+if (stored.length > 0) {
+  listStoredCases()
+}
+
+function listStoredCases () {
+  const storedCases = document.querySelector('.stored-cases')
+  storedCases.innerHTML = '<h3>Edited cases:</h3>'
+
+  for (const id of stored) {
+    const li = document.createElement('li')
+    const a = document.createElement('a')
+    a.innerText = id
+    a.href = `?result=${id}`
+    li.append(a)
+    const button = document.createElement('button')
+    button.addEventListener('click', () => {
+      localStorage.removeItem(`result-${id}`)
+      li.remove()
+    })
+    button.textContent = 'X'
+    button.classList.add('delete-result')
+    li.append(button)
+    storedCases.append(li)
+  }
 }
