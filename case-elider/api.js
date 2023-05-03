@@ -10,12 +10,9 @@ async function search (query) {
     document.querySelector(sel).replaceChildren()
   }
 
-  const resp = await fetch(
-    `${SEARCH_ENDPOINT}?` +
-    new URLSearchParams({
-      q: query
-    })
-  )
+  const resp = await fetch(`${SEARCH_ENDPOINT}?` + new URLSearchParams({
+    q: query
+  }))
 
   if (resp.ok) {
     const {
@@ -246,8 +243,7 @@ const selector = () => {
 const cancel = (uuid, controls) => {
   controls.remove()
   for (const selection of document.querySelectorAll(
-      `mark[data-selection-id="${uuid}"]`
-  )) {
+      `mark[data-selection-id="${uuid}"]`)) {
     selection.insertAdjacentHTML('beforeBegin', selection.innerHTML)
     selection.remove()
   }
@@ -287,8 +283,7 @@ const addHandlers = (id) => {
     const uuid = ins.getAttribute('data-selection-id')
     ins.addEventListener('click', () => {
       for (const elision of document.querySelectorAll(
-          `del[data-selection-id="${uuid}"]`
-      )) {
+          `del[data-selection-id="${uuid}"]`)) {
         elision.insertAdjacentHTML('beforeBegin', elision.innerHTML)
         elision.remove()
       }
