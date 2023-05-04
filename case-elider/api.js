@@ -207,10 +207,12 @@ const selector = () => {
       mark.setAttribute('data-selection-id', elisionId)
       range.surroundContents(mark)
     }
+    sel.removeAllRanges()
+
     const controls = document.createElement('div')
+    controls.id = elisionId
     controls.classList.add('controls')
-    controls.style.top = `${first.getBoundingClientRect().top}px`
-    document.body.append(controls)
+    mark.insertAdjacentElement('afterend', controls)
 
     const elideButton = document.createElement('button')
     elideButton.classList.add('elide')
@@ -219,7 +221,6 @@ const selector = () => {
       controls.remove()
       elider(elisionId)
     })
-    sel.removeAllRanges()
 
     const cancelButton = document.createElement('button')
     cancelButton.classList.add('cancel')
@@ -299,7 +300,9 @@ const addHandlers = (id) => {
     })
   }
 }
-document.querySelector('body')?.addEventListener('mouseup', selector)
+document.querySelector('article.case')?.addEventListener('selectstart', () => {
+  document.querySelector('article.case').addEventListener('mouseup', selector, {once: true})
+})
 
 // Use the URL for search results
 const params = new URL(document.location).searchParams
