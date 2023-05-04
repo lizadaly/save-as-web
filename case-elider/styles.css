@@ -124,7 +124,7 @@ button.edit:focus {
 
 div.controls {
   position: absolute;
-  left: 0;
+  left: 5vw;
   display: flex;
   gap: 10px;
   background: var(--light);
