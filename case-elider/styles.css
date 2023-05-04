@@ -71,7 +71,7 @@ ul.stored-cases li {
 article.case:empty {
   box-shadow: none;
 }
-article.case:empty + footer button {
+section.container:has(article.case:empty) + footer button {
   visibility: hidden;
 }
 

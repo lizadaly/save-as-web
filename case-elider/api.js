@@ -210,7 +210,7 @@ const selector = () => {
     const controls = document.createElement('div')
     controls.classList.add('controls')
     controls.style.top = `${first.getBoundingClientRect().top}px`
-    document.body.prepend(controls)
+    document.body.append(controls)
 
     const elideButton = document.createElement('button')
     elideButton.classList.add('elide')
