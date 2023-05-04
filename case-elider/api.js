@@ -2,9 +2,8 @@ import { selector } from './elider.js'
 import { retrieve } from './storage.js'
 import { search, showResult } from './search.js'
 
-
 document.querySelector('article.case')?.addEventListener('selectstart', () => {
-  document.querySelector('article.case').addEventListener('mouseup', selector, {once: true})
+  document.querySelector('article.case').addEventListener('mouseup', selector, { once: true })
 })
 
 // Use the URL for search results

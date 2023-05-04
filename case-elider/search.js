@@ -1,7 +1,5 @@
 
-
 import { store } from './storage.js'
-
 
 const BASE_URI = 'https://www.courtlistener.com'
 const SEARCH_ENDPOINT = `${BASE_URI}/api/rest/v3/search/`
