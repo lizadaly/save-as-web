@@ -77,12 +77,7 @@ const download = (type, label, button) => {
   }, 1000)
 }
 
-const stored = Object.keys(localStorage).map(item => {
-  const id = item.replace('result-', '')
-  return id
-})
-
-if (stored.length > 0) {
+if (Object.keys(localStorage).length > 0) {
   listStoredCases()
 }
 
@@ -90,10 +85,11 @@ function listStoredCases () {
   const storedCases = document.querySelector('.stored-cases')
   storedCases.innerHTML = '<h3>Edited cases:</h3>'
 
-  for (const id of stored) {
+  for (const id of Object.keys(localStorage)) {
+    const { metadata } = JSON.parse(localStorage.getItem(id))
     const li = document.createElement('li')
     const a = document.createElement('a')
-    a.innerText = id
+    a.innerText = metadata.case_name
     a.href = `?result=${id}`
     li.append(a)
     const button = document.createElement('button')

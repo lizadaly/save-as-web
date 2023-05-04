@@ -138,9 +138,10 @@ button.delete-result {
   background: inherit;
   color: red;
 }
-.case-citation {
+.metadata {
   font-weight: normal;
   font-size: 1em;
+  text-align: center;
 }
 .results {
   font-size: smaller;

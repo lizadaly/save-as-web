@@ -1,5 +1,5 @@
 
-import { store } from './storage.js'
+import { render } from './render.js'
 
 const BASE_URI = 'https://www.courtlistener.com'
 const SEARCH_ENDPOINT = `${BASE_URI}/api/rest/v3/search/`
@@ -9,7 +9,7 @@ export async function search (query) {
   const submit = document.querySelector('input[type="submit"]')
   submit.value = 'Searching'
 
-  for (const sel of ['.results', 'article', '.case-citation']) {
+  for (const sel of ['.results', 'article', '.metadata']) {
     document.querySelector(sel).replaceChildren()
   }
 
@@ -66,22 +66,17 @@ export async function search (query) {
 }
 
 export async function showResult (id) {
-  const resp = await fetch(`${OPINION_ENDPOINT}${id}/`)
+  let resp = await fetch(`${OPINION_ENDPOINT}${id}/`)
   if (resp.ok) {
     const data = await resp.json()
-    const section = document.createElement('section')
-    section.innerHTML = data.html || data.html_lawbox || data.html_with_citations || data.html_columbia
-    const article = document.querySelector('article.case')
-    article.replaceChildren(section)
-    store(id, section.outerHTML)
+    resp = await fetch(data.cluster)
 
-    article.setAttribute('data-id', id)
-    document.querySelector('.case-citation').insertAdjacentHTML('beforebegin', `
-     <a class="courtlistener-url" 
-        href="https://courtlistener.com${data.absolute_url}">
-        View on CourtListener
-     </a>
-    `)
+    if (resp.ok) {
+      const metadata = await resp.json()
+      const content = data.html || data.html_lawbox || data.html_with_citations || data.html_columbia
+
+      render(metadata, content)
+    }
   } else {
     console.error(resp)
   }

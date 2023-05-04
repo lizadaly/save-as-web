@@ -1,25 +1,24 @@
-export const store = (id, content) => {
-  if (!content) {
-    content = document.querySelector('article.case')?.innerHTML
-    if (!content) {
-      console.warn(`Tried to serialize content for ${id} but there wasn't any content`)
-    }
-  }
-  localStorage.setItem(`result-${id}`, content)
+import { render } from './render.js'
+
+export const store = () => {
+  const article = document.querySelector('article.case')
+  const { metadata } = article
+  const { id } = metadata
+  const content = article.innerHTML
+
+  localStorage.setItem(id, JSON.stringify({ metadata, content }))
 }
 
 export const retrieve = (id) => {
-  const content = localStorage.getItem(`result-${id}`)
-  if (!content) {
+  const data = localStorage.getItem(`result-${id}`)
+  if (!data) {
     return false
   }
-  const article = document.querySelector('article.case')
-  article.setAttribute('data-id', id)
-  article.innerHTML = content
-  addHandlers(id)
+  const { metadata, content } = JSON.parse(data)
+  render(metadata, content)
   return true
 }
-export const addHandlers = (id) => {
+export const addHandlers = () => {
   // Find all the elide handlers and refresh them
   for (const ins of document.querySelectorAll('article.case ins')) {
     const uuid = ins.getAttribute('data-selection-id')
@@ -30,7 +29,6 @@ export const addHandlers = (id) => {
         elision.remove()
       }
       ins.remove()
-      store(id)
     })
   }
 }

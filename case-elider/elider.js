@@ -131,7 +131,7 @@ export const elider = () => {
     requestAnimationFrame(() => {
       const article = document.querySelector('article.case')
       const id = article.getAttribute('data-id')
-      store(id, article.innerHTML)
+      store(id)
       addHandlers(id)
     })
   }
