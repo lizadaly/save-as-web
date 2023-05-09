@@ -9,8 +9,8 @@
     "vite": "^4.3.4"
   },
   "standard": {
-    "env": {
-      "browser": true
-    }
+    "env": [
+      "browser"
+    ]
   }
 }
