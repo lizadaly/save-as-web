@@ -10,7 +10,7 @@ export const store = () => {
 }
 
 export const retrieve = (id) => {
-  const data = localStorage.getItem(id)
+  const data = localStorage.getItem(`${id}`)
   if (!data) {
     return false
   }
@@ -28,6 +28,23 @@ export const addHandlers = () => {
         match.insertAdjacentHTML('beforeBegin', match.innerHTML)
         match.remove()
       }
+      store()
+    })
+  }
+  for (const el of document.querySelectorAll('article.case [data-annotation-remover]')) {
+    const uuid = el.getAttribute('data-selection-id')
+    el.addEventListener('click', () => {
+      for (const match of document.querySelectorAll(`mark[data-selection-id="${uuid}"]`)) {
+        match.insertAdjacentHTML('beforeBegin', match.innerHTML)
+        match.remove()
+      }
+      el.closest('.annotation-marker').remove()
+      store()
+    })
+  }
+  // Note handlers too
+  for (const el of document.querySelectorAll('article.case .annotation-marker aside')) {
+    el.addEventListener('blur', () => {
       store()
     })
   }

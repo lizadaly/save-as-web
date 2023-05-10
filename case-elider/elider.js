@@ -14,12 +14,12 @@ export const selector = () => {
     elideButton.addEventListener('click', () => {
       elider()
     })
-    // const annotateButton = document.createElement('button')
-    // annotateButton.classList.add('annotate')
-    // annotateButton.innerText = 'Add note'
-    // annotateButton.addEventListener('click', () => {
-    //   annotator()
-    // })
+    const annotateButton = document.createElement('button')
+    annotateButton.classList.add('annotate')
+    annotateButton.innerText = 'Add note'
+    annotateButton.addEventListener('click', () => {
+      annotator()
+    })
 
     const highlightButton = document.createElement('button')
     highlightButton.classList.add('highlight')
@@ -33,7 +33,7 @@ export const selector = () => {
         controls.remove()
       })
     })
-    controls.append(elideButton, highlightButton)
+    controls.append(elideButton, highlightButton, annotateButton)
   }
 }
 const createRanges = () => {
@@ -132,21 +132,58 @@ const elider = () => {
   let del
 
   const ranges = createRanges()
-  const elisionId = crypto.randomUUID()
+  const id = crypto.randomUUID()
 
   for (const range of ranges) {
     del = document.createElement('del')
-    del.setAttribute('data-selection-id', elisionId)
+    del.setAttribute('data-selection-id', id)
     del.classList.add('elided-content')
     range.surroundContents(del)
   }
 
   const ins = document.createElement('ins')
   ins.classList.add('elide-marker', 'removable')
-  ins.setAttribute('data-selection-id', elisionId)
+  ins.setAttribute('data-selection-id', id)
   del.insertAdjacentElement('afterend', ins)
   ins.title = 'Click to unelide'
 
+  requestAnimationFrame(() => {
+    store()
+    addHandlers()
+  })
+}
+
+const annotator = () => {
+  let mark, first
+
+  const ranges = createRanges()
+  const id = crypto.randomUUID()
+
+  for (const range of ranges) {
+    mark = document.createElement('mark')
+    if (!first) {
+      first = mark
+    }
+    mark.setAttribute('data-selection-id', id)
+    mark.classList.add('annotated-content')
+    range.surroundContents(mark)
+  }
+  const aside = document.createElement('aside')
+  aside.setAttribute('contenteditable', 'true')
+  aside.setAttribute('placeholder', 'Add your note here')
+
+  const container = document.createElement('div')
+  container.classList.add('annotation-marker')
+  container.setAttribute('data-selection-id', id)
+
+  const closeButton = document.createElement('button')
+  closeButton.setAttribute('data-selection-id', id)
+  closeButton.setAttribute('data-annotation-remover', true)
+  closeButton.innerText = 'X'
+  closeButton.title = 'Delete annotation'
+  container.append(aside, closeButton)
+
+  first.insertAdjacentElement('beforebegin', container)
   requestAnimationFrame(() => {
     store()
     addHandlers()
@@ -166,12 +203,6 @@ const highlighter = () => {
     mark.title = 'Click to remove highlight'
     range.surroundContents(mark)
   }
-
-  // const ins = document.createElement('ins')
-  // ins.classList.add('elide-marker')
-  // ins.setAttribute('data-selection-id', elisionId)
-  // del.insertAdjacentElement('afterend', ins)
-  // ins.title = 'Click to unelide'
 
   requestAnimationFrame(() => {
     store()
