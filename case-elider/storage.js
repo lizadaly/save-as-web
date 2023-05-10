@@ -20,16 +20,14 @@ export const retrieve = (id) => {
 }
 
 export const addHandlers = () => {
-  // Find all the elide handlers and refresh them
-  for (const ins of document.querySelectorAll('article.case ins')) {
-    const uuid = ins.getAttribute('data-selection-id')
-    ins.addEventListener('click', () => {
-      for (const elision of document.querySelectorAll(
-                `del[data-selection-id="${uuid}"]`)) {
-        elision.insertAdjacentHTML('beforeBegin', elision.innerHTML)
-        elision.remove()
+  // Find all the annotation handlers and refresh them
+  for (const el of document.querySelectorAll('article.case .removable[data-selection-id]')) {
+    const uuid = el.getAttribute('data-selection-id')
+    el.addEventListener('click', () => {
+      for (const match of document.querySelectorAll(`[data-selection-id="${uuid}"]`)) {
+        match.insertAdjacentHTML('beforeBegin', match.innerHTML)
+        match.remove()
       }
-      ins.remove()
       store()
     })
   }

@@ -9,6 +9,7 @@
   --toned: rgb(102, 99, 186);
   --mid: rgb(213, 222, 241);
   --marked: rgb(255, 241, 202);
+  --elided: rgb(202, 232, 255);
   --light-gray: rgb(250, 250, 250);
   --dark-gray: gray;
 }
@@ -92,6 +93,9 @@ article.case {
 mark {
   background: var(--marked);
 }
+.removable {
+  cursor: pointer;
+}
 .courtlistener-url {
   display: block;
   font-size: smaller;
@@ -110,6 +114,9 @@ button.edit {
 }
 button.edit:hover {
   outline: 2px solid var(--ui-color);
+}
+button.elide {
+  background: var(--toned);
 }
 /* Indicate which result was selected by deemphasizes the ones not clicked on */
 .results:has(button.edit:focus) li {
@@ -200,11 +207,10 @@ del.elided-content {
 }
 ins.elide-marker::after {
   content: " ... ";
-  background: rgb(255, 241, 202);
+  background: var(--elided);
   margin: 0 0.5em;
 }
 ins.elide-marker {
-  cursor: pointer;
   text-decoration: none;
   display: inline-block;
   text-indent: 0;
