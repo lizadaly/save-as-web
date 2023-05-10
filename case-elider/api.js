@@ -1,5 +1,5 @@
 import { selector } from './elider.js'
-import { retrieve } from './storage.js'
+import { retrieve, listStoredCases } from './storage.js'
 import { search, showResult } from './search.js'
 
 document.querySelector('article.case')?.addEventListener('selectstart', () => {
@@ -79,27 +79,4 @@ const download = (type, label, button) => {
 
 if (Object.keys(localStorage).length > 0) {
   listStoredCases()
-}
-
-function listStoredCases () {
-  const storedCases = document.querySelector('.stored-cases')
-  storedCases.innerHTML = '<h3>Edited cases:</h3>'
-
-  for (const id of Object.keys(localStorage)) {
-    const { metadata } = JSON.parse(localStorage.getItem(id))
-    const li = document.createElement('li')
-    const a = document.createElement('a')
-    a.innerText = metadata.case_name
-    a.href = `?result=${id}`
-    li.append(a)
-    const button = document.createElement('button')
-    button.addEventListener('click', () => {
-      localStorage.removeItem(`result-${id}`)
-      li.remove()
-    })
-    button.textContent = 'X'
-    button.classList.add('delete-result')
-    li.append(button)
-    storedCases.append(li)
-  }
 }

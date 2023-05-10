@@ -57,9 +57,7 @@ export const elider = () => {
     const ranges = []
 
     if (start.nodeType !== Node.TEXT_NODE) {
-      start =
-                document.createNodeIterator(start, NodeFilter.SHOW_TEXT).nextNode() ||
-                start
+      start = document.createNodeIterator(start, NodeFilter.SHOW_TEXT).nextNode() || start
     }
     if (end.nodeType !== Node.TEXT_NODE) {
       let lastText
@@ -129,10 +127,8 @@ export const elider = () => {
     ins.title = 'Click to unelide'
 
     requestAnimationFrame(() => {
-      const article = document.querySelector('article.case')
-      const id = article.getAttribute('data-id')
-      store(id)
-      addHandlers(id)
+      store()
+      addHandlers()
     })
   }
 }

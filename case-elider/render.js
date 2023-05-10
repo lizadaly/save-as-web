@@ -1,4 +1,4 @@
-import { store, addHandlers } from './storage.js'
+import { store, addHandlers, listStoredCases } from './storage.js'
 
 export const render = (metadata, content) => {
   const { id } = metadata
@@ -16,4 +16,5 @@ export const render = (metadata, content) => {
     `
   addHandlers()
   store()
+  listStoredCases()
 }

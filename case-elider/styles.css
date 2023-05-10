@@ -81,7 +81,7 @@ article.case {
   padding: 7vh 5vw;
   font-family: var(--serif-font-family);
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 10px 0px, rgba(14, 30, 37, 0.2) 0px 2px 8px 0px;
-  overflow-x: scroll;
+  overflow-x: hidden;
 }
 .selected {
   background: var(--marked);
