@@ -10,7 +10,7 @@ export const store = () => {
 }
 
 export const retrieve = (id) => {
-  const data = localStorage.getItem(id)
+  const data = localStorage.getItem(`${id}`)
   if (!data) {
     return false
   }
@@ -20,16 +20,31 @@ export const retrieve = (id) => {
 }
 
 export const addHandlers = () => {
-  // Find all the elide handlers and refresh them
-  for (const ins of document.querySelectorAll('article.case ins')) {
-    const uuid = ins.getAttribute('data-selection-id')
-    ins.addEventListener('click', () => {
-      for (const elision of document.querySelectorAll(
-                `del[data-selection-id="${uuid}"]`)) {
-        elision.insertAdjacentHTML('beforeBegin', elision.innerHTML)
-        elision.remove()
+  // Find all the annotation handlers and refresh them
+  for (const el of document.querySelectorAll('article.case .removable[data-selection-id]')) {
+    const uuid = el.getAttribute('data-selection-id')
+    el.addEventListener('click', () => {
+      for (const match of document.querySelectorAll(`[data-selection-id="${uuid}"]`)) {
+        match.insertAdjacentHTML('beforeBegin', match.innerHTML)
+        match.remove()
       }
-      ins.remove()
+      store()
+    })
+  }
+  for (const el of document.querySelectorAll('article.case [data-annotation-remover]')) {
+    const uuid = el.getAttribute('data-selection-id')
+    el.addEventListener('click', () => {
+      for (const match of document.querySelectorAll(`mark[data-selection-id="${uuid}"]`)) {
+        match.insertAdjacentHTML('beforeBegin', match.innerHTML)
+        match.remove()
+      }
+      el.closest('.annotation-marker').remove()
+      store()
+    })
+  }
+  // Note handlers too
+  for (const el of document.querySelectorAll('article.case .annotation-marker aside')) {
+    el.addEventListener('blur', () => {
       store()
     })
   }
