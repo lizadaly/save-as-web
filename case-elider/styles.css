@@ -67,7 +67,15 @@ ul.stored-cases {
 }
 ul.stored-cases li {
   list-style-type: none;
-
+  line-height: 1.2em;
+  margin-bottom: 1em;
+}
+button.delete-result {
+  background: inherit;
+  color: red;
+  line-height: 1em;
+  padding: 0 0 0 .75em;
+  font-size: smaller;
 }
 article.case:empty {
   box-shadow: none;
@@ -145,10 +153,7 @@ div.controls {
 button.cancel {
   background: var(--dark-gray);
 }
-button.delete-result {
-  background: inherit;
-  color: red;
-}
+
 .metadata {
   font-weight: normal;
   font-size: 1em;
@@ -229,6 +234,7 @@ ins.elide-marker {
   font-family: var(--sans-font-family);
   font-size: smaller;
   color: var(--dark);
+  text-indent: initial;
 }
 mark.annotated-content { 
   background: var(--annotated);

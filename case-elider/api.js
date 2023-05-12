@@ -1,4 +1,4 @@
-import { selector } from './elider.js'
+import { selector } from './annotator.js'
 import { retrieve, listStoredCases } from './storage.js'
 import { search, showResult } from './search.js'
 
