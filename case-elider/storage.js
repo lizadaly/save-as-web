@@ -25,7 +25,9 @@ export const addHandlers = () => {
     const uuid = el.getAttribute('data-selection-id')
     el.addEventListener('click', () => {
       for (const match of document.querySelectorAll(`[data-selection-id="${uuid}"]`)) {
-        match.insertAdjacentHTML('beforeBegin', match.innerHTML)
+        if (!match.getAttribute('data-destructive')) {
+          match.insertAdjacentHTML('beforeBegin', match.innerHTML)
+        }
         match.remove()
       }
       store()
@@ -68,6 +70,7 @@ export function listStoredCases () {
     })
     button.textContent = 'X'
     button.classList.add('delete-result')
+    button.setAttribute('type', 'button')
     li.append(button)
     storedCases.append(li)
   }

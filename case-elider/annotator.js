@@ -203,7 +203,33 @@ const highlighter = () => {
     mark.title = 'Click to remove highlight'
     range.surroundContents(mark)
   }
+  const controls = document.createElement('div')
+  controls.classList.add('controls')
+  controls.style.top = `${mark.getBoundingClientRect().bottom + window.scrollY}px`
+  controls.setAttribute('data-selection-id', highlightId)
+  controls.setAttribute('data-destructive', true)
+  document.body.append(controls)
 
+  const colorButton = document.createElement('input')
+  colorButton.setAttribute('type', 'color')
+  colorButton.setAttribute('value', '#fff1ca')
+
+  colorButton.innerText = 'Change color'
+
+  // Update the highlight in real time...
+  colorButton.addEventListener('input', () => {
+    for (const hl of document.querySelectorAll(`[data-selection-id="${highlightId}"]`)) {
+      hl.style.backgroundColor = event.target.value
+    }
+  })
+
+  // ...but only persist it when the modal is dismissed
+  colorButton.addEventListener('change', () => {
+    store()
+    controls.remove()
+  })
+
+  controls.append(colorButton)
   requestAnimationFrame(() => {
     store()
     addHandlers()
